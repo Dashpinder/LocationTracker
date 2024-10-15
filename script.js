@@ -23,18 +23,22 @@ btn.addEventListener("click", function() {
   switch(error.code) {
    case error.PERMISSION_DENIED:
     tracker.innerHTML= "User ne location k lie mna krdia";
+    tracker.style.color= "red";
     break;
 
     case error.POSITION_UNAVAILABLE:
       tracker.innerHTML= "location information is unavailable";
+       tracker.style.color= "red";
       break;
 
    case error.TIMEOUT:
     tracker.innerHTML= "User's location took too long and timed out.";
+    tracker.style.color= "red";
     break;
 
     case error.UNKNOWN_ERROR:
       tracker.innerHTML= "Unknown error occurred";
+      tracker.style.color= "red";
      break;
   }
 
