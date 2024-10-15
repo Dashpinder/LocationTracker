@@ -1,26 +1,69 @@
-const images = document.querySelectorAll('#slider img'); // Select all the images in the slider
-    let currentIndex = 0;  // Index to track the current image being shown
+let btn= document.getElementById("btn");
 
-    // Function to show the image based on the currentIndex
-    function showImage(index) {
-        for (let i = 0; i < images.length; i++) {
-            images[i].style.display = 'none';  // Hide all images
-        }
-          images[index].style.display = 'block';  // Display the current image
-    }
+btn.addEventListener("click", function() {
+ let tracker= document.getElementById("tracker");
+ let city= document.getElementById("city");
 
-    // Initialize by showing the first image
-    showImage(currentIndex);
+ if(navigator.geolocation){
+  navigator.geolocation.getCurrentPosition(dashPosition, dashError);
+  } else {
+  tracker.innerHTML= "Can't access your location";
+ }
 
-    prevBtn.addEventListener('click', function() {
-      let prevBtn= document.getElementById("prevBtn");
-        currentIndex = (currentIndex - 1 + images.length) % images.length;  // Decrement index and loop
-        showImage(currentIndex);  // Update the slider
-    });
+ function dashPosition(position) {
+   const latitude= position.coords.latitude;
+   const longitude= position.coords.longitude;
+ 
+   tracker.innerHTML= "Latitude:" + latitude + "<br> longitude:" + longitude;
+   cityShowing(latitude, longitude);
+  }
+  
 
-    // Event listener for the "Next" button
-    nextBtn.addEventListener('click', function() {
-      let nextBtn= document.getElementById("nextBtn");
-        currentIndex = (currentIndex + 1) % images.length;  // Increment index and loop
-        showImage(currentIndex);  // Update the slider
-    });
+ function dashError(error) {
+  switch(error.code) {
+   case error.PERMISSION_DENIED:
+    tracker.innerHTML= "User ne location k lie mna krdia";
+    break;
+
+    case error.POSITION_UNAVAILABLE:
+      tracker.innerHTML= "location information is unavailable";
+      break;
+
+   case error.TIMEOUT:
+    tracker.innerHTML= "User's location took too long and timed out.";
+    break;
+
+    case error.UNKNOWN_ERROR:
+      tracker.innerHTML= "Unknown error occurred";
+     break;
+  }
+
+ } 
+  
+async function cityShowing(latitude, longitude) {
+
+  let response= await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+
+  let pkaData= await response.json();
+  console.log(pkaData);
+
+  city.innerHTML= pkaData.display_name;
+
+}
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
